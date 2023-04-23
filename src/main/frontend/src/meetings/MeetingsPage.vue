@@ -15,6 +15,7 @@
 import NewMeetingForm from "./NewMeetingForm";
 import MeetingsList from "./MeetingsList";
 
+
 export default {
   components: {NewMeetingForm, MeetingsList},
   props: {username: String},
