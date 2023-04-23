@@ -57,6 +57,7 @@ export default {
     },
     logMeOut() {
       this.authenticatedUsername = '';
+      delete axios.defaults.headers.common.Authorization;
     },
 
     register(user) {
