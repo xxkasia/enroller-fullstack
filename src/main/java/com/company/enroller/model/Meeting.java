@@ -1,6 +1,7 @@
 package com.company.enroller.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -12,8 +13,8 @@ import java.util.Set;
 public class Meeting {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @Column
     private String title;
@@ -24,7 +25,6 @@ public class Meeting {
     @Column
     private String date;
 
-    @JsonIgnore
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "meeting_participant", joinColumns = {@JoinColumn(name = "meeting_id")}, inverseJoinColumns = {
             @JoinColumn(name = "participant_login")})
