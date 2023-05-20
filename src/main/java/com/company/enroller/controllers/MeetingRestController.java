@@ -86,7 +86,7 @@ public class MeetingRestController {
         return new ResponseEntity<Collection<Participant>>(meeting.getParticipants(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "{id}/participants", method = RequestMethod.POST)
+    @RequestMapping(value = "{id}/participants", method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<?> addParticipant(@PathVariable("id") long id, @RequestBody Map<String, String> json) {
 
         Meeting currentMeeting = meetingService.findById(id);
