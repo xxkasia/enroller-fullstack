@@ -1,7 +1,7 @@
 <template>
   <div>
     <NewMeetingForm @added="addNewMeeting($event)"></NewMeetingForm>
-    <span v-if="meetings.length == 0">Brak zaplanowanych spotkań.</span>
+    <span v-if="meetings.length === 0">Brak zaplanowanych spotkań.</span>
     <h3 v-else>Zaplanowane zajęcia ({{ meetings.length }})</h3>
     <MeetingsList :meetings="meetings"
                   :username="username"
@@ -21,8 +21,7 @@ export default {
   props: {username: String, meetings: Array},
   data() {
     return {
-      meetings: [],
-      participants: []
+
     };
   },
   methods: {
@@ -40,10 +39,10 @@ export default {
           });
     },
     addMeetingParticipant(meeting) {
-      axios.post("/api/meetings/" + meeting.id + "/participants", this.username)
+      axios.post("/api/meetings/" + meeting.id + "/participants", {login: this.username})
           .then(response => {
             this.message = ("Udało się dodać uczestnika spotkania")
-            meeting.participants.push(this.username);
+            meeting.participants.push({login: this.username});
           })
           .catch(response => {
             this.message = ("Nie udało się dodać uczestnika spotkania")
@@ -53,7 +52,7 @@ export default {
       axios.delete("/api/meetings/" + meeting.id + "/participants/" + this.username)
           .then(response => {
             this.message = ("Udało się usunąć uczestnika spotkania")
-            meeting.participants.splice(meeting.participants.indexOf(this.username), 1);
+            meeting.participants.splice(meeting.participants.findIndex(p => p.login === this.username), 1);
           })
           .catch(response => {
             this.message = ("Nie udało się usunąć uczestnika spotkania")
