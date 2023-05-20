@@ -14,28 +14,60 @@
 <script>
 import NewMeetingForm from "./NewMeetingForm";
 import MeetingsList from "./MeetingsList";
-
+import axios from "axios";
 
 export default {
   components: {NewMeetingForm, MeetingsList},
-  props: {username: String},
+  props: {username: String, meetings: Array},
   data() {
     return {
-      meetings: []
+      meetings: [],
+      participants: []
     };
   },
   methods: {
     addNewMeeting(meeting) {
-      this.meetings.push(meeting);
+      axios.post('/api/meetings', meeting)
+          .then(response => {
+            this.message = ("Udało się dodać spotkanie")
+            this.meetings.push({
+              id: response.data.id,
+              ...meeting
+            })
+          })
+          .catch(response => {
+            this.message = ("Nie udało się dodać spotkania")
+          });
     },
     addMeetingParticipant(meeting) {
-      meeting.participants.push(this.username);
+      axios.post("/api/meetings/" + meeting.id + "/participants", this.username)
+          .then(response => {
+            this.message = ("Udało się dodać uczestnika spotkania")
+            meeting.participants.push(this.username);
+          })
+          .catch(response => {
+            this.message = ("Nie udało się dodać uczestnika spotkania")
+          });
     },
     removeMeetingParticipant(meeting) {
-      meeting.participants.splice(meeting.participants.indexOf(this.username), 1);
+      axios.delete("/api/meetings/" + meeting.id + "/participants/" + this.username)
+          .then(response => {
+            this.message = ("Udało się usunąć uczestnika spotkania")
+            meeting.participants.splice(meeting.participants.indexOf(this.username), 1);
+          })
+          .catch(response => {
+            this.message = ("Nie udało się usunąć uczestnika spotkania")
+          });
     },
     deleteMeeting(meeting) {
-      this.meetings.splice(this.meetings.indexOf(meeting), 1);
+      axios.delete('/api/meetings/' + meeting.id)
+          .then(response => {
+            this.message = ("Udało się usunąć spotkanie")
+            this.meetings.splice(this.meetings.indexOf(meeting), 1);
+          })
+          .catch(response => {
+            this.message = ("Nie udało się dodać spotkania")
+          });
     },
   }
 }
