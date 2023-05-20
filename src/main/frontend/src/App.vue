@@ -39,7 +39,6 @@ export default {
         const token = localStorage.getItem('token');
         if (username && token) {
             this.storeAuth(username, token);
-            // if token expired or user has been deleted - logout!
             axios.get(`/api/meetings`).catch(() => this.logMeOut());
         }
     },
